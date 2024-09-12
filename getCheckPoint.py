@@ -19,10 +19,10 @@ def query_mongodb():
     
     checkpoint_repository = CheckPointRepository(db)
     retrieve_checkpoints = checkpoint_repository.find_with_filter({"last_activity":"PENDING", "entity_type":"tenant"})
-    print("Retrieved checkpoints:", retrieve_checkpoints.count())
+    #print("Retrieved checkpoints:", retrieve_checkpoints.count())
     
     documents = retrieve_checkpoints
-    for doc in retrieve_checkpoints:
+    for doc in documents:
        print(doc)
 
 if __name__ == "__main__":
