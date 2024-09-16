@@ -2,7 +2,7 @@ name: Register-Tenant-Workflow
 
 on:
   schedule:
-    - cron: '*/1 * * * *' # Runs every minute
+    - cron: '0 */6 * * *' # Runs every minute
   workflow_dispatch:
     
 concurrency:
