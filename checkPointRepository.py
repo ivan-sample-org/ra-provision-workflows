@@ -1,3 +1,10 @@
+"""
+This module contains the CheckPointRepository class that is responsible for handling the CRUD operations for the checkpoint data in the database.
+author: Ivan Hidalgo
+date: 2024-09-09
+
+"""
+
 class CheckPointRepository:
     
     __collection__ = 'provision-state-machine'
@@ -37,7 +44,7 @@ class CheckPointRepository:
         return self.collection.find()  
     
     def find_with_filter(self, filter):
-        return self.collection.find(filter)
+        return self.collection.find(filter).sort('_id', -1).limit(1)
     
     def delete(self, execution_id):
         self.collection.delete_one({'execution_id': execution_id})

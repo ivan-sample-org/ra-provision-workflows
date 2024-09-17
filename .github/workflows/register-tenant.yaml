@@ -30,9 +30,11 @@ jobs:
         pip install pymongo
         pip install python-dotenv
         pip install certifi
+        pip install dataclasses  
+        pip install pydantic   
 
     - name: Run query script
-      run: python getCheckPoint.py
+      run: python getCheckPoint.py COMPLETED tenant     
       env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         MONGO_DB: ${{ secrets.MONGO_DB }}
