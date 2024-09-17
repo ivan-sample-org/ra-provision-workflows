@@ -33,8 +33,15 @@ jobs:
         pip install dataclasses  
         pip install pydantic   
 
-    - name: Run query script
+    - name: Fetch PENDING check point 
       run: python getCheckPoint.py COMPLETED tenant     
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+        MONGO_DB: ${{ secrets.MONGO_DB }}
+        MONGO_COLLECTION: ${{ secrets.MONGO_COLLECTION }}
+    
+    - name: Update check point to REGISTERED  
+      run: python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae" 
       env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         MONGO_DB: ${{ secrets.MONGO_DB }}
