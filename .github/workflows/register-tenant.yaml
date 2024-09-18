@@ -57,6 +57,7 @@ jobs:
         echo "tenant: ${{ steps.fetch_check_point.outputs.tenant_id }}"
     
     - name: Update check point to REGISTERED  
+      if: ${{ steps.fetch_check_point.outputs.execution_id != null }}
       run: python updateCheckPoint.py "REGISTERED" "tenant" ${{ steps.fetch_check_point.outputs.execution_id }} ${{ steps.calculate_cluster_index.outputs.cluster_index }}
       env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
