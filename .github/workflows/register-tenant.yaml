@@ -49,6 +49,8 @@ jobs:
         echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
         cat "$GITHUB_OUTPUT"
         
+    - name: Print output variable
+      run: echo "cluster_index=${{ steps.calculate_cluster_index.outputs.cluster_index }}"
     
     - name: Update check point to REGISTERED  
       run: python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae" "001"
