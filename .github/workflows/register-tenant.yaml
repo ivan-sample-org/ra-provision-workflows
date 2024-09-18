@@ -35,7 +35,7 @@ jobs:
 
     - name: Fetch PENDING check point 
       id: fetch_check_point
-      run: python getCheckPoint.py COMPLETED tenant     
+      run: python getCheckPoint.py PENDING tenant     
       env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         MONGO_DB: ${{ secrets.MONGO_DB }}
