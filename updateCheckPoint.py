@@ -3,7 +3,7 @@
  author: Ivan Hidalgo
  date: 2024-09-09
  
- python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae"
+ python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae" "001"
  
 """ 
 
@@ -18,8 +18,9 @@ from pymongo import MongoClient
 DEFAULT_LAST_ACTIVITY = "REGISTERED"
 DEFAULT_ENTITY_TYPE = "tenant"
 DEFAULT_EXECUTION_ID = ""
+DEFAULT_CLUSTER = ""
 
-def query_mongodb(execution_id=DEFAULT_EXECUTION_ID, last_activity = DEFAULT_LAST_ACTIVITY, entity_type = DEFAULT_ENTITY_TYPE):
+def query_mongodb(execution_id=DEFAULT_EXECUTION_ID, last_activity = DEFAULT_LAST_ACTIVITY, entity_type = DEFAULT_ENTITY_TYPE, cluster_id = DEFAULT_CLUSTER):
     
     print("Updating check point in MongoDB")
     
@@ -47,10 +48,12 @@ def query_mongodb(execution_id=DEFAULT_EXECUTION_ID, last_activity = DEFAULT_LAS
     if len(retrieve_checkpoints) == 0:
         print(f"No checkpoints found with last_activity: {last_activity} and entity_type: {entity_type} and execution_id: {execution_id}")
         return
+    
     documentToBeUpdated = retrieve_checkpoints[0]
     documentToBeUpdated['previous_activity'] = documentToBeUpdated['last_activity']
     documentToBeUpdated['last_activity'] = last_activity
-    print(f"Updating document with last_activity: {documentToBeUpdated['last_activity']} and previous_activity: {documentToBeUpdated['previous_activity']}")
+    documentToBeUpdated['cluster'] = cluster_id
+    print(f"Updating document with last_activity: {documentToBeUpdated['last_activity']} and previous_activity: {documentToBeUpdated['previous_activity']} and cluster: {documentToBeUpdated['cluster']}")
     checkpoint_repository.update_one(documentToBeUpdated['execution_id'], documentToBeUpdated)
     
     documents = retrieve_checkpoints
@@ -60,7 +63,7 @@ def query_mongodb(execution_id=DEFAULT_EXECUTION_ID, last_activity = DEFAULT_LAS
 if __name__ == "__main__":
     load_dotenv()
     
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 5:
         if sys.argv[1] is not None:
             last_activity = sys.argv[1]
         else:
@@ -73,7 +76,11 @@ if __name__ == "__main__":
             execution_id = sys.argv[3]
         else:
             execution_id = DEFAULT_EXECUTION_ID
+        if sys.argv[4] is not None:
+            cluster = sys.argv[4]
+        else:
+            cluster = DEFAULT_CLUSTER
     
-    print(f"Updating check point with last_activity: {last_activity} and entity_type: {entity_type} and execution_id: {execution_id}")
+    print(f"Updating check point with last_activity: {last_activity} and entity_type: {entity_type} and execution_id: {execution_id} and cluster: {cluster}")
     
-    query_mongodb(execution_id, last_activity, entity_type)
+    query_mongodb(execution_id, last_activity, entity_type, cluster)

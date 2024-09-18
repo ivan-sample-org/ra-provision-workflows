@@ -40,8 +40,18 @@ jobs:
         MONGO_DB: ${{ secrets.MONGO_DB }}
         MONGO_COLLECTION: ${{ secrets.MONGO_COLLECTION }}
     
+    - name: Calculate cluxter index
+      id: calculate_cluster_index
+      run: echo "cluster_index=001" >> "$GITHUB_OUTPUT"
+    
+    - name: Print GITHUB_OUTPUT path
+      run: |
+        echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
+        cat "$GITHUB_OUTPUT"
+        
+    
     - name: Update check point to REGISTERED  
-      run: python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae" 
+      run: python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae" "001"
       env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         MONGO_DB: ${{ secrets.MONGO_DB }}
