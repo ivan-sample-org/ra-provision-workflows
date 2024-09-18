@@ -3,6 +3,8 @@ This script queries the MongoDB database for the last checkpoint with the given 
 author: Ivan Hidalgo
 date: 2024-09-09
 
+python3 getCheckPoint.py COMPLETED tenant 
+
 """
 
 import sys
@@ -15,6 +17,10 @@ from pymongo import MongoClient
 
 DEFAULT_LAST_ACTIVITY = "REGISTERED"
 DEFAULT_ENTITY_TYPE = "tenant"
+
+def set_output(file_path, key, value):
+    with open(file_path, 'a') as file:
+        print(f"{key}={value}", file=file)
 
 def query_mongodb(last_activity = "REGISTERED", entity_type = "tenant"):
     
@@ -37,8 +43,6 @@ def query_mongodb(last_activity = "REGISTERED", entity_type = "tenant"):
     db = client[mongo_db]
     print(f"Connected to {mongo_db} database")
     
-    
-    
     checkpoint_repository = CheckPointRepository(db)
     retrieve_checkpoints = list(checkpoint_repository.find_with_filter({"last_activity": last_activity, "entity_type": entity_type}))
     if len(retrieve_checkpoints) == 0:
@@ -48,11 +52,17 @@ def query_mongodb(last_activity = "REGISTERED", entity_type = "tenant"):
     documents = retrieve_checkpoints
     for doc in documents:
        print(doc)
+    
+    # Set the output variables
+    set_output(os.getenv("GITHUB_OUTPUT") , "execution_id", documents[0]['execution_id'])
+    set_output(os.getenv("GITHUB_OUTPUT") , "tenant_id", documents[0]['tenant_id'])
+    set_output(os.getenv("GITHUB_OUTPUT") , "cluster_index", documents[0]['cluster_index'])
+    
 
 if __name__ == "__main__":
     load_dotenv()
-    print(len(sys.argv))
-    if len(sys.argv) == 3:
+    
+    if len(sys.argv) == 2:
         if sys.argv[1] is not None:
             last_activity = sys.argv[1]
         else:

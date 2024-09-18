@@ -34,6 +34,7 @@ jobs:
         pip install pydantic   
 
     - name: Fetch PENDING check point 
+      id: fetch_check_point
       run: python getCheckPoint.py COMPLETED tenant     
       env:
         MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -50,7 +51,10 @@ jobs:
         cat "$GITHUB_OUTPUT"
         
     - name: Print output variable
-      run: echo "cluster_index=${{ steps.calculate_cluster_index.outputs.cluster_index }}"
+      run: |
+        echo "cluster_index: ${{ steps.calculate_cluster_index.outputs.cluster_index }}"
+        echo "execution_id: ${{ steps.fetch_check_point.outputs.execution_id }}"
+        echo "tenant: ${{ steps.fetch_check_point.outputs.tenant }}"
     
     - name: Update check point to REGISTERED  
       run: python updateCheckPoint.py "REGISTERED" "tenant" "86a3710a-6357-482c-8896-1bdf1abce7ae" "001"
