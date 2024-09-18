@@ -15,14 +15,14 @@ from checkPointRepository import CheckPointRepository
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-DEFAULT_LAST_ACTIVITY = "REGISTERED"
+DEFAULT_LAST_ACTIVITY = "PENDING"
 DEFAULT_ENTITY_TYPE = "tenant"
 
 def set_output(file_path, key, value):
     with open(file_path, 'a') as file:
         print(f"{key}={value}", file=file)
 
-def query_mongodb(last_activity = "REGISTERED", entity_type = "tenant"):
+def query_mongodb(last_activity = "PENDING", entity_type = "tenant"):
     
     print("Fetching last check point in MongoDB")
    
@@ -62,7 +62,7 @@ def query_mongodb(last_activity = "REGISTERED", entity_type = "tenant"):
 if __name__ == "__main__":
     load_dotenv()
     
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         if sys.argv[1] is not None:
             last_activity = sys.argv[1]
         else:
